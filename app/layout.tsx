@@ -7,9 +7,12 @@ import { ThemeProvider } from "@/components/theme-provider";
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
-  title: "SUPERTEACHER - India's First AI-Powered Grading Assistant",
+  icons: {
+    icon: "/Logo.png",
+  },
+  title: "Super Teacher - India's First AI-Powered Grading Assistant",
   description: "Grade handwritten answers. Get instant feedback. Save hours.",
-  generator: "v0.dev",
+  generator: "Super Teacher",
 };
 
 export default function RootLayout({

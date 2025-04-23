@@ -58,6 +58,25 @@
   }
 }
 
+/* Infinite Moving Cards Animation */
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - 1rem));
+  }
+}
+
+.animate-scroll {
+  animation: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+}
+
+.scroller {
+  mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+}
+
+/* Other Animations */
 .typewriter {
   overflow: hidden;
   border-right: 0.15em solid #0085fb;

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient"
 
 export default function LiveDemo() {
   const [isTyping, setIsTyping] = useState(false)
@@ -87,13 +88,15 @@ export default function LiveDemo() {
               </div>
 
               <div className="text-center">
-                <Button
-                  className="gradient-button text-white font-bold px-8 py-3 rounded-full"
+                <HoverBorderGradient
+                  containerClassName="w-auto mx-auto"
+                  className="bg-[#0085FB] text-white font-bold px-8 py-3"
                   onClick={() => setIsTyping(true)}
                   disabled={isTyping}
+                  as={isTyping ? "div" : "button"}
                 >
                   {isTyping ? "Grading..." : "Grade Now"}
-                </Button>
+                </HoverBorderGradient>
               </div>
             </div>
           </motion.div>

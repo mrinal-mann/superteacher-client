@@ -2,20 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import {
-  Navbar,
-  NavBody,
-  NavItems,
-  MobileNav,
-  MobileNavHeader,
-  MobileNavMenu,
-  MobileNavToggle,
-} from "@/components/ui/resizable-navbar";
+import { FloatingNav } from "@/components/ui/floating-navbar";
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+  
   const navItems = [
     { name: "Product", link: "#product" },
     { name: "Pricing", link: "#pricing" },
@@ -24,74 +18,51 @@ export default function Header() {
   ];
 
   return (
-    <Navbar>
-      <NavBody>
-        {/* Logo */}
-        <Link href="/" className="relative z-20 flex items-center">
-          <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-2">
-            ST
-          </div>
-          <span className="text-2xl font-bold text-[#0085FB]">
-            SUPER<span className="text-black">TEACHER</span>
-          </span>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <NavItems items={navItems} />
-
-        {/* Desktop CTA Button */}
-        <div className="relative z-20">
-          <Button
-            className="gradient-button text-white font-medium px-6 py-2 rounded-full"
+    <>
+      {/* Regular navbar that's always visible */}
+      <header className="sticky top-0 z-40 bg-white shadow-sm">
+        <div className="flex justify-between items-center py-4 px-8 max-w-7xl mx-auto">
+          {/* Logo */}
+          <Link href="/" className="relative z-20 flex items-center">
+            <div className="w-10 h-10 ">
+              <Image src="/Logo.png" alt="Logo" width={40} height={40} /> 
+            </div>
+            <span className="text-2xl font-bold text-[#0085FB]">
+              Super<span className="text-black"> Teacher</span>
+            </span>
+          </Link>
+          
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex space-x-8">
+            {navItems.map((item, idx) => (
+              <Link
+                key={idx}
+                href={item.link}
+                className="text-gray-600 hover:text-[#0085FB] font-medium transition-colors"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+          
+          {/* CTA Button */}
+          <HoverBorderGradient
+            containerClassName="w-auto"
+            className="bg-[#0085FB] hover:bg-[#0075e0] text-white font-medium px-6 py-2"
             onClick={() => window.open("#start-grading", "_self")}
           >
             Start Grading
-          </Button>
+          </HoverBorderGradient>
         </div>
-      </NavBody>
+      </header>
 
-      {/* Mobile Navigation */}
-      <MobileNav>
-        <MobileNavHeader>
-          <Link href="/" className="flex items-center">
-            <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold mr-2">
-              ST
-            </div>
-            <span className="text-xl font-bold text-[#0085FB]">
-              SUPER<span className="text-black">TEACHER</span>
-            </span>
-          </Link>
-          <MobileNavToggle
-            isOpen={mobileMenuOpen}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          />
-        </MobileNavHeader>
-
-        <MobileNavMenu
-          isOpen={mobileMenuOpen}
-          onClose={() => setMobileMenuOpen(false)}
-        >
-          {navItems.map((item, idx) => (
-            <Link
-              key={idx}
-              href={item.link}
-              className="w-full px-4 py-2 text-lg font-medium text-gray-600 hover:text-[#0085FB] transition-colors"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {item.name}
-            </Link>
-          ))}
-          <Button
-            className="w-full gradient-button text-white font-medium px-6 py-2 rounded-full mt-4"
-            onClick={() => {
-              window.open("#start-grading", "_self");
-              setMobileMenuOpen(false);
-            }}
-          >
-            Start Grading
-          </Button>
-        </MobileNavMenu>
-      </MobileNav>
-    </Navbar>
+      {/* Floating navbar that appears on scroll */}
+      <FloatingNav 
+        navItems={[
+          ...navItems
+        ]} 
+        className="py-3"
+      />
+    </>
   );
 }

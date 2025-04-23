@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Facebook, Twitter, Instagram, Linkedin, Send } from "lucide-react"
@@ -10,8 +11,11 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           <div>
             <Link href="/" className="flex items-center mb-6">
+              <div className="w-8 h-8 mr-2">
+                <Image src="/Logo.png" alt="Logo" width={32} height={32} /> 
+              </div>
               <span className="text-2xl font-bold text-[#0085FB]">
-                SUPER<span className="text-white">TEACHER</span>
+                Super<span className="text-white"> Teacher</span>
               </span>
             </Link>
             <p className="text-gray-400 mb-6">
@@ -87,7 +91,7 @@ export default function Footer() {
 
           <div>
             <h3 className="text-lg font-bold mb-6">Get Early Access</h3>
-            <p className="text-gray-400 mb-4">Join our waitlist to be among the first to experience SUPERTEACHER.</p>
+            <p className="text-gray-400 mb-4">Join our waitlist to be among the first to experience SuperTeacher.</p>
             <div className="flex" id="waitlist">
               <Input
                 type="email"
@@ -103,7 +107,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 pt-8 mt-8 text-center md:flex md:justify-between md:text-left">
           <p className="text-gray-500 mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} SUPERTEACHER. All rights reserved.
+            &copy; {new Date().getFullYear()} SuperTeacher. All rights reserved.
           </p>
           <div className="flex justify-center md:justify-end space-x-6">
             <Link href="#" className="text-gray-500 hover:text-[#0085FB] transition-colors">

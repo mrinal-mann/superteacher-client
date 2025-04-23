@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Pencil, FileText, CheckSquare } from "lucide-react"
+import { HoverBorderGradient } from "@/components/ui/hover-border-gradient"
 
 export default function FinalCta() {
   return (
@@ -26,16 +27,17 @@ export default function FinalCta() {
           transition={{ duration: 0.5 }}
           className="bg-[#0085FB] rounded-2xl shadow-xl p-8 md:p-12 text-center text-white max-w-4xl mx-auto"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Join SUPERTEACHER — Try It Now</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Join SuperTeacher — Try It Now</h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Transform your grading process today. Join thousands of teachers saving hours every week.
           </p>
-          <Button
-            className="bg-white text-[#0085FB] hover:bg-gray-100 font-bold text-lg px-8 py-6 rounded-full pulse"
+          <HoverBorderGradient
+            containerClassName="w-auto mx-auto"
+            className="bg-white text-[#0085FB] hover:bg-gray-100 font-bold text-lg px-8 py-6 pulse"
             onClick={() => window.open("#waitlist", "_self")}
           >
             Get Early Access
-          </Button>
+          </HoverBorderGradient>
           <p className="mt-6 text-sm opacity-90">Limited spots available. No credit card required.</p>
         </motion.div>
       </div>
