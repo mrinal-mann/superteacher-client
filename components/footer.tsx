@@ -1,0 +1,120 @@
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Facebook, Twitter, Instagram, Linkedin, Send } from "lucide-react"
+
+export default function Footer() {
+  return (
+    <footer className="bg-gray-900 text-white pt-16 pb-8" id="contact">
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          <div>
+            <Link href="/" className="flex items-center mb-6">
+              <span className="text-2xl font-bold text-[#0085FB]">
+                SUPER<span className="text-white">TEACHER</span>
+              </span>
+            </Link>
+            <p className="text-gray-400 mb-6">
+              India's first AI-powered grading assistant for teachers. Save time, provide better feedback.
+            </p>
+            <div className="flex space-x-4">
+              <a href="#" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                <Facebook size={20} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                <Twitter size={20} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                <Instagram size={20} />
+              </a>
+              <a href="#" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                <Linkedin size={20} />
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold mb-6">Quick Links</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link href="#product" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                  Product
+                </Link>
+              </li>
+              <li>
+                <Link href="#pricing" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                  Pricing
+                </Link>
+              </li>
+              <li>
+                <Link href="#testimonials" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                  Testimonials
+                </Link>
+              </li>
+              <li>
+                <Link href="#contact" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold mb-6">Resources</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                  Blog
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                  Help Center
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                  Tutorials
+                </Link>
+              </li>
+              <li>
+                <Link href="#" className="text-gray-400 hover:text-[#0085FB] transition-colors">
+                  API Documentation
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-bold mb-6">Get Early Access</h3>
+            <p className="text-gray-400 mb-4">Join our waitlist to be among the first to experience SUPERTEACHER.</p>
+            <div className="flex" id="waitlist">
+              <Input
+                type="email"
+                placeholder="Your email address"
+                className="rounded-l-md rounded-r-none border-r-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+              />
+              <Button className="rounded-l-none bg-[#0085FB] hover:bg-[#0075e0]">
+                <Send size={18} />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-800 pt-8 mt-8 text-center md:flex md:justify-between md:text-left">
+          <p className="text-gray-500 mb-4 md:mb-0">
+            &copy; {new Date().getFullYear()} SUPERTEACHER. All rights reserved.
+          </p>
+          <div className="flex justify-center md:justify-end space-x-6">
+            <Link href="#" className="text-gray-500 hover:text-[#0085FB] transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="#" className="text-gray-500 hover:text-[#0085FB] transition-colors">
+              Terms of Service
+            </Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
+}
