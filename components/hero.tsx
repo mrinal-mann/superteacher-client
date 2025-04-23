@@ -1,37 +1,26 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { motion } from "framer-motion"
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 export default function Hero() {
-  const [isTypingComplete, setIsTypingComplete] = useState(false)
-  const headlineRef = useRef<HTMLHeadingElement>(null)
-
-  useEffect(() => {
-    const typewriterEffect = setTimeout(() => {
-      setIsTypingComplete(true)
-    }, 3500) // Match with the CSS animation duration
-
-    return () => clearTimeout(typewriterEffect)
-  }, [])
-
   return (
     <section className="pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
-            <h1
-              ref={headlineRef}
-              className={`text-4xl md:text-5xl lg:text-6xl font-bold mb-6 ${isTypingComplete ? "" : "typewriter"}`}
-              style={{ width: isTypingComplete ? "100%" : "0" }}
-            >
-              India's First AI-Powered Grading Platform for Teachers
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+              <span>India's First </span>
+              <span className="text-blue-500">AI-Powered</span>
+              <span> Grading Platform for </span>
+              <span className="text-blue-500">Teachers</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-gray-700">
-              Say goodbye to long nights grading papers. SuperTeacher grades assignments with accuracy and provides
-              detailed feedback in minutes, not hours.
+              Say goodbye to long nights grading papers. SuperTeacher grades
+              assignments with accuracy and provides detailed feedback in
+              minutes, not hours.
             </p>
             <Button
               className="gradient-button text-white font-bold text-lg px-8 py-6 rounded-full"
@@ -42,7 +31,8 @@ export default function Hero() {
 
             <div className="mt-8 p-4 bg-[#F7F7F7] rounded-lg border border-gray-200">
               <p className="text-sm text-gray-600 font-medium">
-                Trusted by 500+ schools & teachers across Delhi, Mumbai, and Bangalore
+                Trusted by 500+ schools & teachers across Delhi, Mumbai, and
+                Bangalore
               </p>
             </div>
           </div>
@@ -62,7 +52,9 @@ export default function Hero() {
                   height={400}
                   className="rounded-lg w-full h-auto"
                 />
-                <p className="text-sm text-center mt-2 text-gray-600">Student's handwritten answer</p>
+                <p className="text-sm text-center mt-2 text-gray-600">
+                  Student's handwritten answer
+                </p>
               </div>
 
               <div className="bg-[#F7F7F7] rounded-lg p-4 flex flex-col">
@@ -73,19 +65,26 @@ export default function Hero() {
 
                 <div className="flex-1">
                   <div className="mb-4">
-                    <p className="font-semibold text-sm text-gray-600">Score:</p>
+                    <p className="font-semibold text-sm text-gray-600">
+                      Score:
+                    </p>
                     <p className="font-bold text-xl ai-typing">4/6</p>
                   </div>
 
                   <div className="mb-4">
-                    <p className="font-semibold text-sm text-gray-600">Feedback:</p>
+                    <p className="font-semibold text-sm text-gray-600">
+                      Feedback:
+                    </p>
                     <div className="ai-typing text-sm">
-                      Good explanation of the concept, but missing examples to demonstrate understanding.
+                      Good explanation of the concept, but missing examples to
+                      demonstrate understanding.
                     </div>
                   </div>
 
                   <div>
-                    <p className="font-semibold text-sm text-gray-600">Improvements:</p>
+                    <p className="font-semibold text-sm text-gray-600">
+                      Improvements:
+                    </p>
                     <ul className="text-sm list-disc pl-5 space-y-1">
                       <li>Include practical examples</li>
                       <li>Expand on second point</li>
@@ -98,5 +97,5 @@ export default function Hero() {
         </div>
       </div>
     </section>
-  )
+  );
 }

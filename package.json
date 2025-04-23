@@ -38,15 +38,17 @@
     "@radix-ui/react-toggle": "1.1.1",
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
+    "@tabler/icons-react": "^3.31.0",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
     "date-fns": "^3.0.0",
     "embla-carousel-react": "8.5.1",
-    "framer-motion": "latest",
+    "framer-motion": "^12.8.0",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
+    "motion": "^12.8.0",
     "next": "15.2.4",
     "next-themes": "^0.4.4",
     "react": "^18.3.1",
@@ -62,10 +64,14 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/next": "^8.0.7",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "css-loader": "^7.1.2",
+    "mini-css-extract-plugin": "^2.9.2",
     "postcss": "^8",
+    "postcss-loader": "^8.1.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
   }
