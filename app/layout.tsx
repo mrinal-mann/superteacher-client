@@ -8,7 +8,7 @@ const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
   icons: {
-    icon: "/Logo.png",
+    icon: "/whitelogo.png",
   },
   title: "Super Teacher - India's First AI-Powered Grading Assistant",
   description: "Grade handwritten answers. Get instant feedback. Save hours.",

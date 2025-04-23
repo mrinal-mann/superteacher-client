@@ -12,7 +12,7 @@ export default function Footer() {
           <div>
             <Link href="/" className="flex items-center mb-6">
               <div className="w-8 h-8 mr-2">
-                <Image src="/Logo.png" alt="Logo" width={32} height={32} /> 
+                <Image src="/whitelogo.png" alt="Logo" width={32} height={32} /> 
               </div>
               <span className="text-2xl font-bold text-[#0085FB]">
                 Super<span className="text-white"> Teacher</span>
