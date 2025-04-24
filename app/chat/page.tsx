@@ -36,6 +36,22 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages, streamingMessage]);
 
+  // Monitor for "Starting a new grading session" message and reset file upload state
+  React.useEffect(() => {
+    // Check the most recent message
+    const lastMessage = messages[messages.length - 1];
+    if (
+      lastMessage?.role === "assistant" &&
+      (lastMessage.content.includes("Starting a new grading session") ||
+        lastMessage.content.includes("Do you want to grade another answer?"))
+    ) {
+      console.log(
+        "Detected new grading session in assistant message, resetting file state"
+      );
+      resetFileUploadState();
+    }
+  }, [messages]);
+
   // Cleanup preview URLs when component unmounts
   React.useEffect(() => {
     return () => {
@@ -43,119 +59,42 @@ const ChatInterface = () => {
     };
   }, [previewUrls]);
 
-  // Initialize chat with greeting on first load
-  React.useEffect(() => {
-    // Send initial "hi" message to get the greeting response
-    handleInitialGreeting();
-  }, []);
-
-  const handleInitialGreeting = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
-        }/api/chat`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "text/event-stream", // Request streaming response
-          },
-          body: JSON.stringify({ message: "hi" }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`API response error: ${response.status}`);
-      }
-
-      // Check if the response is a stream
-      if (response.headers.get("content-type")?.includes("text/event-stream")) {
-        // Handle SSE (Server-Sent Events)
-        const reader = response.body?.getReader();
-        const decoder = new TextDecoder();
-
-        if (!reader) {
-          throw new Error("No reader available for stream");
-        }
-
-        let receivedText = "";
-
-        // Read the stream
-        while (true) {
-          const { done, value } = await reader.read();
-
-          if (done) {
-            break;
-          }
-
-          // Decode the chunk
-          const chunk = decoder.decode(value, { stream: true });
-
-          // Process SSE data
-          const lines = chunk.split("\n\n");
-          for (const line of lines) {
-            if (line.startsWith("data: ")) {
-              try {
-                const eventData = JSON.parse(line.substring(6));
-
-                // Handle character-by-character streaming
-                if (eventData.char) {
-                  receivedText += eventData.char;
-                  setStreamingMessage(receivedText);
-                }
-                // Handle userId messages
-                else if (eventData.userId && !userId) {
-                  setUserId(eventData.userId);
-                }
-                // Handle done messages
-                else if (eventData.done) {
-                  // Final message received, add to messages
-                  if (receivedText) {
-                    const newAssistantMessage: Message = {
-                      id: Date.now().toString(),
-                      content: receivedText,
-                      role: "assistant",
-                      timestamp: new Date(),
-                    };
-
-                    setMessages((prev) => [...prev, newAssistantMessage]);
-                    setStreamingMessage("");
-                  }
-                }
-              } catch (e) {
-                console.error("Error parsing SSE data:", e);
-              }
-            }
-          }
-        }
-      } else {
-        // Handle non-streaming response
-        const data = await response.json();
-
-        // Save the userId for future requests
-        setUserId(data.userId);
-
-        // Add assistant message with the greeting
-        const newAssistantMessage: Message = {
-          id: Date.now().toString(),
-          content: data.message,
-          role: "assistant",
-          timestamp: new Date(),
-        };
-
-        setMessages([newAssistantMessage]);
-      }
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Error sending initial greeting:", error);
-      setIsLoading(false);
-    }
-  };
-
   const handleSendMessage = async () => {
     if ((!inputValue.trim() && selectedFiles.length === 0) || isLoading) return;
+
+    // Reset user ID only for greeting messages
+    if (
+      inputValue.toLowerCase() === "hi" ||
+      inputValue.toLowerCase() === "hello" ||
+      inputValue.toLowerCase().includes("hi") ||
+      inputValue.toLowerCase().includes("hello") ||
+      inputValue.toLowerCase().includes("hey") ||
+      inputValue.toLowerCase().includes("start")
+    ) {
+      console.log("Greeting message detected, starting fresh session");
+      setUserId("");
+      resetFileUploadState();
+    }
+
+    // Check for new grading session after a completed one
+    // Look for the last message from the assistant
+    const lastMessage = messages[messages.length - 1];
+    if (
+      lastMessage?.role === "assistant" &&
+      (lastMessage.content.includes("Do you want to grade another answer?") ||
+        lastMessage.content.includes("Starting a new grading session"))
+    ) {
+      // If the user sends a question after the grading completion message
+      // we should treat this as a new question for a new grading session
+      console.log("Starting new grading session with question:", inputValue);
+
+      // DO NOT reset the userId - we need to maintain the same session
+      // Instead, just reset the file upload state
+      resetFileUploadState();
+
+      // Log that we're continuing with the same userId
+      console.log(`Continuing with userId: ${userId}`);
+    }
 
     const newUserMessage: Message = {
       id: Date.now().toString(),
@@ -191,6 +130,10 @@ const ChatInterface = () => {
 
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
+      // Clear selected files and previews but don't reset userId
+      selectedFiles.forEach(() => {
+        console.log("Clearing selected files after message sent");
+      });
       setSelectedFiles([]);
       setPreviewUrls([]);
       setIsLoading(false);
@@ -202,6 +145,18 @@ const ChatInterface = () => {
       // Prepare for streaming
       setStreamingMessage("");
 
+      // Ensure we have a userId - even if empty, generate a new one
+      const currentUserId = userId || `user-${Date.now()}`;
+
+      // If this is our first time using this ID, store it
+      if (!userId) {
+        console.log(`Generated new userId: ${currentUserId}`);
+        setUserId(currentUserId);
+      } else {
+        console.log(`Using existing userId: ${currentUserId}`);
+      }
+
+      console.log(`Sending text message with userId: ${currentUserId}`);
       const response = await fetch(
         `${
           process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
@@ -214,7 +169,7 @@ const ChatInterface = () => {
           },
           body: JSON.stringify({
             message,
-            userId,
+            userId: currentUserId,
           }),
         }
       );
@@ -307,9 +262,16 @@ const ChatInterface = () => {
       // Create form data with files and message
       const formData = new FormData();
 
-      // Append user ID if available
-      if (userId) {
-        formData.append("userId", userId);
+      // ALWAYS append user ID - even if empty, generate a new one client-side
+      const currentUserId = userId || `user-${Date.now()}`;
+      formData.append("userId", currentUserId);
+
+      // If this is our first time using this ID, store it
+      if (!userId) {
+        console.log(`Generated new userId: ${currentUserId}`);
+        setUserId(currentUserId);
+      } else {
+        console.log(`Using existing userId: ${currentUserId}`);
       }
 
       // Append message text if provided
@@ -322,6 +284,7 @@ const ChatInterface = () => {
         formData.append("image", file);
       });
 
+      console.log(`Sending image upload with userId: ${currentUserId}`);
       const response = await fetch(
         `${
           process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
@@ -431,15 +394,27 @@ const ChatInterface = () => {
   };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
+    if (e.target.files && e.target.files.length > 0) {
+      // Clear previous files first to ensure we're not accumulating files
+      if (selectedFiles.length > 0 || previewUrls.length > 0) {
+        resetFileUploadState();
+      }
+
       const filesArray = Array.from(e.target.files);
-      setSelectedFiles((prev) => [...prev, ...filesArray]);
+      console.log(`Selected ${filesArray.length} new files`);
+
+      setSelectedFiles(filesArray);
 
       // Create and store preview URLs
-      const newPreviewUrls = filesArray.map((file) =>
-        URL.createObjectURL(file)
-      );
-      setPreviewUrls((prev) => [...prev, ...newPreviewUrls]);
+      const newPreviewUrls = filesArray.map((file) => {
+        const url = URL.createObjectURL(file);
+        console.log(`Created preview URL for file: ${file.name}`);
+        return url;
+      });
+
+      setPreviewUrls(newPreviewUrls);
+    } else {
+      console.log("No files selected or file selection canceled");
     }
   };
 
@@ -459,6 +434,23 @@ const ChatInterface = () => {
     });
   };
 
+  // Helper function to reset all file upload state
+  const resetFileUploadState = () => {
+    // Clear any selected files
+    setSelectedFiles([]);
+
+    // Revoke and clear preview URLs
+    previewUrls.forEach((url) => URL.revokeObjectURL(url));
+    setPreviewUrls([]);
+
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+
+    console.log("File upload state has been completely reset");
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       {/* Header */}
@@ -473,6 +465,16 @@ const ChatInterface = () => {
 
       {/* Messages Container */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        {/* Welcome message when no messages exist */}
+        {messages.length === 0 && !streamingMessage && !isLoading && (
+          <div className="text-center p-8 text-gray-500">
+            <h2 className="text-xl font-semibold mb-2">
+              Welcome to SuperTeacher!
+            </h2>
+            <p>Send "hi" to start grading student work.</p>
+          </div>
+        )}
+
         {messages.map((message) => (
           <div
             key={message.id}
