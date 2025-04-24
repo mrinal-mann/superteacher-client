@@ -3,9 +3,16 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Image as ImageIcon, ArrowLeft } from "lucide-react";
+import {
+  Send,
+  Image as ImageIcon,
+  ArrowLeft,
+  RefreshCw,
+  HelpCircle,
+} from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import ReactMarkdown from "react-markdown"; // Add this import for rendering markdown
 
 interface Message {
   id: string;
@@ -13,6 +20,8 @@ interface Message {
   role: "user" | "assistant";
   timestamp: Date;
   attachments?: string[];
+  isGrading?: boolean; // Flag for assessment/grading responses
+  subjectArea?: string; // Subject area detected for this message
 }
 
 // Create a separate client component to handle state
@@ -24,6 +33,9 @@ const ChatInterface = () => {
   const [previewUrls, setPreviewUrls] = React.useState<string[]>([]);
   const [userId, setUserId] = React.useState<string>("");
   const [streamingMessage, setStreamingMessage] = React.useState<string>("");
+  const [conversationState, setConversationState] =
+    React.useState<string>("initial");
+  const [detectedSubject, setDetectedSubject] = React.useState<string>("");
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -36,19 +48,40 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages, streamingMessage]);
 
-  // Monitor for "Starting a new grading session" message and reset file upload state
+  // Monitor for session state changes in assistant messages
   React.useEffect(() => {
     // Check the most recent message
     const lastMessage = messages[messages.length - 1];
-    if (
-      lastMessage?.role === "assistant" &&
-      (lastMessage.content.includes("Starting a new grading session") ||
-        lastMessage.content.includes("Do you want to grade another answer?"))
-    ) {
-      console.log(
-        "Detected new grading session in assistant message, resetting file state"
-      );
-      resetFileUploadState();
+    if (lastMessage?.role === "assistant") {
+      // Detect grading completion
+      if (
+        lastMessage.content.includes("Do you want to grade another answer?") ||
+        lastMessage.content.includes("## Student Assessment") ||
+        lastMessage.content.includes("## Quick Assessment")
+      ) {
+        console.log("Detected completed grading assessment");
+        setConversationState("complete");
+        lastMessage.isGrading = true;
+        resetFileUploadState();
+      }
+      // Detect waiting for image
+      else if (
+        lastMessage.content.includes("Please upload an image") ||
+        lastMessage.content.includes("share an image")
+      ) {
+        console.log("Detected waiting for image upload");
+        setConversationState("waiting_for_answer");
+      }
+      // Detect waiting for grading instruction
+      else if (
+        lastMessage.content.includes("How would you like me to evaluate") ||
+        lastMessage.content.includes("How would you like me to grade")
+      ) {
+        console.log("Detected waiting for grading instructions");
+        setConversationState("waiting_for_instruction");
+      }
+
+      // No need to detect and highlight specific subject areas anymore
     }
   }, [messages]);
 
@@ -62,38 +95,23 @@ const ChatInterface = () => {
   const handleSendMessage = async () => {
     if ((!inputValue.trim() && selectedFiles.length === 0) || isLoading) return;
 
-    // Reset user ID only for greeting messages
-    if (
-      inputValue.toLowerCase() === "hi" ||
-      inputValue.toLowerCase() === "hello" ||
-      inputValue.toLowerCase().includes("hi") ||
-      inputValue.toLowerCase().includes("hello") ||
-      inputValue.toLowerCase().includes("hey") ||
-      inputValue.toLowerCase().includes("start")
-    ) {
+    // Reset user ID for greeting messages
+    if (inputValue.toLowerCase().match(/^(hi|hello|hey|greetings|start)\b/)) {
       console.log("Greeting message detected, starting fresh session");
       setUserId("");
       resetFileUploadState();
+      setConversationState("initial");
     }
 
-    // Check for new grading session after a completed one
-    // Look for the last message from the assistant
-    const lastMessage = messages[messages.length - 1];
+    // If we're in completed state and user sends a new message that's not a follow-up
     if (
-      lastMessage?.role === "assistant" &&
-      (lastMessage.content.includes("Do you want to grade another answer?") ||
-        lastMessage.content.includes("Starting a new grading session"))
+      conversationState === "complete" &&
+      !inputValue.toLowerCase().includes("why") &&
+      !inputValue.toLowerCase().includes("explain") &&
+      inputValue.length > 15
     ) {
-      // If the user sends a question after the grading completion message
-      // we should treat this as a new question for a new grading session
       console.log("Starting new grading session with question:", inputValue);
-
-      // DO NOT reset the userId - we need to maintain the same session
-      // Instead, just reset the file upload state
-      resetFileUploadState();
-
-      // Log that we're continuing with the same userId
-      console.log(`Continuing with userId: ${userId}`);
+      setConversationState("waiting_for_question");
     }
 
     const newUserMessage: Message = {
@@ -131,9 +149,6 @@ const ChatInterface = () => {
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
       // Clear selected files and previews but don't reset userId
-      selectedFiles.forEach(() => {
-        console.log("Clearing selected files after message sent");
-      });
       setSelectedFiles([]);
       setPreviewUrls([]);
       setIsLoading(false);
@@ -261,30 +276,26 @@ const ChatInterface = () => {
     try {
       // Create form data with files and message
       const formData = new FormData();
-
-      // ALWAYS append user ID - even if empty, generate a new one client-side
       const currentUserId = userId || `user-${Date.now()}`;
-      formData.append("userId", currentUserId);
 
       // If this is our first time using this ID, store it
       if (!userId) {
         console.log(`Generated new userId: ${currentUserId}`);
         setUserId(currentUserId);
-      } else {
-        console.log(`Using existing userId: ${currentUserId}`);
       }
 
-      // Append message text if provided
+      // Append all data
+      formData.append("userId", currentUserId);
       if (textMessage.trim()) {
         formData.append("message", textMessage);
       }
-
-      // Append all selected files
       selectedFiles.forEach((file) => {
         formData.append("image", file);
       });
 
-      console.log(`Sending image upload with userId: ${currentUserId}`);
+      // Set conversation state to processing
+      setConversationState("grading_in_progress");
+
       const response = await fetch(
         `${
           process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
@@ -292,7 +303,7 @@ const ChatInterface = () => {
         {
           method: "POST",
           headers: {
-            Accept: "text/event-stream", // Request streaming response
+            Accept: "text/event-stream",
           },
           body: formData,
         }
@@ -365,11 +376,6 @@ const ChatInterface = () => {
       } else {
         // Handle non-streaming response
         const data = await response.json();
-
-        // Save the userId if it's returned
-        if (data.userId) {
-          setUserId(data.userId);
-        }
 
         const newAssistantMessage: Message = {
           id: Date.now().toString(),
@@ -451,6 +457,75 @@ const ChatInterface = () => {
     console.log("File upload state has been completely reset");
   };
 
+  // Function to start a new grading session
+  const handleStartNewSession = () => {
+    setConversationState("initial");
+    sendTextToBackend("Start a new grading session");
+  };
+
+  // Get input placeholder based on conversation state
+  const getInputPlaceholder = () => {
+    switch (conversationState) {
+      case "initial":
+        return "Type a question you want to grade or say 'hi' to get started...";
+      case "waiting_for_question":
+        return "What question or assignment would you like to assess?";
+      case "waiting_for_answer":
+        return "Upload an image of the student's work, or type additional context...";
+      case "waiting_for_instruction":
+        return "How would you like me to grade this? (e.g., 'Grade out of 10 points')";
+      case "complete":
+        return "Ask a follow-up question or start a new assessment...";
+      default:
+        return "Type your message or upload an image...";
+    }
+  };
+
+  // Get contextual UI cues
+  const getContextualHint = () => {
+    if (isLoading) return null;
+
+    switch (conversationState) {
+      case "initial":
+        return (
+          <div className="text-sm text-gray-500 flex items-center mb-2">
+            <HelpCircle className="w-4 h-4 mr-1" />
+            <span>Start by sharing what you'd like to grade</span>
+          </div>
+        );
+      case "waiting_for_answer":
+        return (
+          <div className="text-sm text-blue-500 flex items-center mb-2">
+            <ImageIcon className="w-4 h-4 mr-1" />
+            <span>Please upload an image of the student's work</span>
+          </div>
+        );
+      case "waiting_for_instruction":
+        return (
+          <div className="text-sm text-purple-500 flex items-center mb-2">
+            <span>
+              Specify how you'd like this graded (e.g., "Grade out of 10
+              points")
+            </span>
+          </div>
+        );
+      case "complete":
+        return (
+          <div className="text-sm text-green-500 flex items-center mb-2">
+            <RefreshCw className="w-4 h-4 mr-1" />
+            <button
+              onClick={handleStartNewSession}
+              className="underline hover:text-green-600"
+            >
+              Start new assessment
+            </button>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen bg-gray-50">
       {/* Header */}
@@ -471,7 +546,21 @@ const ChatInterface = () => {
             <h2 className="text-xl font-semibold mb-2">
               Welcome to SuperTeacher!
             </h2>
-            <p>Send "hi" to start grading student work.</p>
+            <p>Our AI assistant helps you grade student work in any subject.</p>
+            <p className="mt-4 text-sm">To get started:</p>
+            <ol className="text-left mt-2 mx-auto inline-block">
+              <li>1. Share the question you're grading</li>
+              <li>2. Upload an image of the student's work</li>
+              <li>3. Tell us how you'd like it graded</li>
+            </ol>
+            <p className="mt-4">
+              <button
+                onClick={() => setInputValue("Hi")}
+                className="text-[#0085FB] hover:underline"
+              >
+                Say "Hi" to begin
+              </button>
+            </p>
           </div>
         )}
 
@@ -482,13 +571,23 @@ const ChatInterface = () => {
               "max-w-[85%] rounded-lg p-4",
               message.role === "user"
                 ? "bg-[#0085FB] text-white ml-auto"
+                : message.isGrading
+                ? "bg-white border-2 border-green-300 mr-auto"
                 : "bg-white border border-gray-200 mr-auto"
             )}
           >
             <div className="mb-1 text-sm opacity-70">
               {message.role === "user" ? "You" : "SuperTeacher AI"}
             </div>
-            <div className="whitespace-pre-wrap">{message.content}</div>
+
+            {/* Render markdown for assistant messages */}
+            {message.role === "assistant" ? (
+              <div className="whitespace-pre-wrap prose prose-sm max-w-none dark:prose-invert">
+                <ReactMarkdown>{message.content}</ReactMarkdown>
+              </div>
+            ) : (
+              <div className="whitespace-pre-wrap">{message.content}</div>
+            )}
 
             {/* Display attachments if any */}
             {message.attachments && message.attachments.length > 0 && (
@@ -510,7 +609,9 @@ const ChatInterface = () => {
         {streamingMessage && (
           <div className="max-w-[85%] rounded-lg p-4 bg-white border border-gray-200 mr-auto">
             <div className="mb-1 text-sm opacity-70">SuperTeacher AI</div>
-            <div className="whitespace-pre-wrap">{streamingMessage}</div>
+            <div className="whitespace-pre-wrap prose prose-sm max-w-none dark:prose-invert">
+              <ReactMarkdown>{streamingMessage}</ReactMarkdown>
+            </div>
           </div>
         )}
 
@@ -532,7 +633,11 @@ const ChatInterface = () => {
               ></div>
             </div>
             <div className="text-sm text-gray-500">
-              SuperTeacher AI is thinking...
+              SuperTeacher AI is{" "}
+              {conversationState === "grading_in_progress"
+                ? "grading"
+                : "thinking"}
+              ...
             </div>
           </div>
         )}
@@ -566,14 +671,25 @@ const ChatInterface = () => {
 
       {/* Input Area */}
       <div className="p-3 bg-white border-t border-gray-200">
+        {getContextualHint()}
+
         <div className="flex items-end gap-2 max-w-4xl mx-auto">
           <Button
             variant="outline"
             size="icon"
-            className="rounded-full h-10 w-10 flex-shrink-0"
+            className={cn(
+              "rounded-full h-10 w-10 flex-shrink-0",
+              conversationState === "waiting_for_answer" &&
+                "animate-pulse border-blue-400"
+            )}
             onClick={() => fileInputRef.current?.click()}
           >
-            <ImageIcon className="h-5 w-5" />
+            <ImageIcon
+              className={cn(
+                "h-5 w-5",
+                conversationState === "waiting_for_answer" && "text-blue-500"
+              )}
+            />
             <input
               type="file"
               accept="image/*"
@@ -589,7 +705,7 @@ const ChatInterface = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Type your message or upload an image..."
+              placeholder={getInputPlaceholder()}
               className="min-h-[50px] max-h-[200px] pr-10 resize-none"
               ref={textareaRef}
             />
