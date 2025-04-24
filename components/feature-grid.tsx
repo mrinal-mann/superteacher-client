@@ -35,7 +35,7 @@ export default function FeatureGrid() {
     <section className="py-20">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose SuperTeacher</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Super Teacher</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">Designed specifically for Indian educators</p>
           <div className="h-1 w-24 bg-[#0085FB] mx-auto mt-4 rounded-full"></div>
         </div>

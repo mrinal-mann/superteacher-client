@@ -19,16 +19,22 @@ export default function Hero() {
               <span className="text-blue-500">Teachers</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-gray-700">
-              Say goodbye to long nights grading papers. SuperTeacher grades
+              Say goodbye to long nights grading papers. Super Teacher grades
               assignments with accuracy and provides detailed feedback in
               minutes, not hours.
             </p>
             <HoverBorderGradient
               containerClassName="w-auto"
               className="bg-[#0085FB] hover:bg-[#0075e0] font-bold text-lg px-8 py-6"
-              onClick={() => window.open("#waitlist", "_self")}
+              onClick={() => window.open("https://tally.so/r/w4ELKX", "_blank")}
             >
-              Join the Waitlist
+              <a
+                href="https://tally.so/r/w4ELKX"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Join the Waitlist
+              </a>
             </HoverBorderGradient>
 
             <div className="mt-8 p-4 bg-[#F7F7F7] rounded-lg border border-gray-200">
@@ -38,14 +44,14 @@ export default function Hero() {
               </p>
             </div>
           </div>
-              <div className="">
-                <Image
-                  src="/super.png"
-                  alt="Handwritten answer example"
-                  width={300}
-                  height={400}
-                  className="rounded-lg w-full h-auto"
-                />
+          <div className="">
+            <Image
+              src="/super.png"
+              alt="Handwritten answer example"
+              width={300}
+              height={400}
+              className="rounded-lg w-full h-auto"
+            />
           </div>
         </div>
       </div>

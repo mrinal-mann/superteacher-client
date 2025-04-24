@@ -8,7 +8,7 @@ export default function SolutionSection() {
     <section className="py-20 bg-[#F7F7F7]">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">How Superteacher Solves These Problems</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">How Super teacher Solves These Problems</h2>
           <div className="h-1 w-24 bg-[#0085FB] mx-auto mt-4 rounded-full"></div>
         </div>
 

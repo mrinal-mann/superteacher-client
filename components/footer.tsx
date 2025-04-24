@@ -91,7 +91,7 @@ export default function Footer() {
 
           <div>
             <h3 className="text-lg font-bold mb-6">Get Early Access</h3>
-            <p className="text-gray-400 mb-4">Join our waitlist to be among the first to experience SuperTeacher.</p>
+            <p className="text-gray-400 mb-4">Join our waitlist to be among the first to experience Super Teacher.</p>
             <div className="flex" id="waitlist">
               <Input
                 type="email"
@@ -107,7 +107,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 pt-8 mt-8 text-center md:flex md:justify-between md:text-left">
           <p className="text-gray-500 mb-4 md:mb-0">
-            &copy; {new Date().getFullYear()} SuperTeacher. All rights reserved.
+            &copy; {new Date().getFullYear()} Super Teacher. All rights reserved.
           </p>
           <div className="flex justify-center md:justify-end space-x-6">
             <Link href="#" className="text-gray-500 hover:text-[#0085FB] transition-colors">

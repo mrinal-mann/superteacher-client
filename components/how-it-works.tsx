@@ -56,7 +56,7 @@ export default function HowItWorks() {
     <section className="py-20 bg-gradient-to-b from-white to-gray-50" id="product">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">How SuperTeacher Works</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">How Super Teacher Works</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">Five simple steps to transform your grading process</p>
           <div className="h-1 w-24 bg-[#0085FB] mx-auto mt-4 rounded-full"></div>
         </div>

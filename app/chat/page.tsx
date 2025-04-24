@@ -289,6 +289,8 @@ const ChatInterface = () => {
       if (textMessage.trim()) {
         formData.append("message", textMessage);
       }
+
+      // Append the image file
       selectedFiles.forEach((file) => {
         formData.append("image", file);
       });
@@ -296,6 +298,17 @@ const ChatInterface = () => {
       // Set conversation state to processing
       setConversationState("grading_in_progress");
 
+      // Show a user message with the attached image preview
+      const newUserMessage: Message = {
+        id: Date.now().toString(),
+        content: textMessage || "Image upload",
+        role: "user",
+        timestamp: new Date(),
+        attachments: previewUrls.length > 0 ? [...previewUrls] : undefined,
+      };
+      setMessages((prev) => [...prev, newUserMessage]);
+
+      // Send the form data to the backend for processing
       const response = await fetch(
         `${
           process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
@@ -386,6 +399,9 @@ const ChatInterface = () => {
 
         setMessages((prev) => [...prev, newAssistantMessage]);
       }
+
+      // Clear the file input and preview after successful upload
+      resetFileUploadState();
     } catch (error) {
       console.error("Error sending files:", error);
       throw error;
@@ -544,7 +560,7 @@ const ChatInterface = () => {
         {messages.length === 0 && !streamingMessage && !isLoading && (
           <div className="text-center p-8 text-gray-500">
             <h2 className="text-xl font-semibold mb-2">
-              Welcome to SuperTeacher!
+              Welcome to Super Teacher!
             </h2>
             <p>Our AI assistant helps you grade student work in any subject.</p>
             <p className="mt-4 text-sm">To get started:</p>
@@ -608,7 +624,7 @@ const ChatInterface = () => {
         {/* Streaming message */}
         {streamingMessage && (
           <div className="max-w-[85%] rounded-lg p-4 bg-white border border-gray-200 mr-auto">
-            <div className="mb-1 text-sm opacity-70">SuperTeacher AI</div>
+            <div className="mb-1 text-sm opacity-70">Super Teacher AI</div>
             <div className="whitespace-pre-wrap prose prose-sm max-w-none dark:prose-invert">
               <ReactMarkdown>{streamingMessage}</ReactMarkdown>
             </div>
@@ -633,7 +649,7 @@ const ChatInterface = () => {
               ></div>
             </div>
             <div className="text-sm text-gray-500">
-              SuperTeacher AI is{" "}
+              Super Teacher AI is{" "}
               {conversationState === "grading_in_progress"
                 ? "grading"
                 : "thinking"}

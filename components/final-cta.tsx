@@ -27,14 +27,14 @@ export default function FinalCta() {
           transition={{ duration: 0.5 }}
           className="bg-[#0085FB] rounded-2xl shadow-xl p-8 md:p-12 text-center text-white max-w-4xl mx-auto"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Join SuperTeacher — Try It Now</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Join Super Teacher — Try It Now</h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
             Transform your grading process today. Join thousands of teachers saving hours every week.
           </p>
           <HoverBorderGradient
             containerClassName="w-auto mx-auto"
             className="bg-white text-[#0085FB] hover:bg-gray-100 font-bold text-lg px-8 py-6 pulse"
-            onClick={() => window.open("#waitlist", "_self")}
+            onClick={() => window.open("https://tally.so/r/w4ELKX", "_blank")}
           >
             Get Early Access
           </HoverBorderGradient>
