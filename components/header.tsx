@@ -46,14 +46,14 @@ export default function Header() {
           </nav>
           
           {/* CTA Button */}
-          <Link href="/chat">
+          {/* <Link href="/chat">
             <HoverBorderGradient
               containerClassName="w-auto"
               className="bg-[#0085FB] hover:bg-[#0075e0] text-white font-medium px-6 py-2"
             >
               Start Grading
             </HoverBorderGradient>
-          </Link>
+          </Link> */}
         </div>
       </header>
 
