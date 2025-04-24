@@ -322,22 +322,49 @@ const ChatInterface = () => {
       };
       setMessages((prev) => [...prev, newUserMessage]);
 
-      // Send the form data to the backend for processing
-      const response = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
-        }/api/chat`,
-        {
-          method: "POST",
-          headers: {
-            Accept: "text/event-stream",
-          },
-          body: formData,
-        }
+      // Log the API endpoint for debugging
+      const apiUrl = `${
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
+      }/api/chat`;
+
+      console.log(`Sending files to: ${apiUrl}`);
+      console.log(`Number of files: ${selectedFiles.length}`);
+      console.log(
+        `First file type: ${selectedFiles[0]?.type}, size: ${selectedFiles[0]?.size} bytes`
       );
 
+      // Send the form data to the backend for processing
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          Accept: "text/event-stream",
+        },
+        body: formData,
+      });
+
       if (!response.ok) {
-        throw new Error(`API response error: ${response.status}`);
+        // Try to get more details about the error
+        let errorDetails = "";
+        try {
+          const errorJson = await response.json();
+          errorDetails = JSON.stringify(errorJson);
+        } catch (e) {
+          // If we can't parse JSON, try to get text
+          try {
+            errorDetails = await response.text();
+          } catch (textError) {
+            errorDetails = "Could not get error details";
+          }
+        }
+
+        console.error(
+          `API response error: ${response.status} - ${response.statusText}`
+        );
+        console.error(`Error details: ${errorDetails}`);
+
+        throw new Error(
+          `API error: ${response.status} - ${errorDetails.substring(0, 100)}`
+        );
       }
 
       // Check if the response is a stream
@@ -418,7 +445,24 @@ const ChatInterface = () => {
       resetFileUploadState();
     } catch (error) {
       console.error("Error sending files:", error);
-      throw error;
+
+      // Add an error message to the chat
+      const errorMessage: Message = {
+        id: generateUniqueId("error"),
+        content: `Unable to process your image. ${
+          error instanceof Error ? error.message : "Please try again later."
+        }`,
+        role: "assistant",
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, errorMessage]);
+
+      // Reset the conversation state
+      setConversationState("waiting_for_answer");
+
+      // Clear loading state
+      setIsLoading(false);
     }
   };
 
