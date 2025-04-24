@@ -14,6 +14,20 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import ReactMarkdown from "react-markdown"; // Add this import for rendering markdown
 
+// Generate unique IDs for messages
+let messageCounter = 0;
+function generateUniqueId(prefix: string = "msg"): string {
+  messageCounter += 1;
+  return `${prefix}-${Date.now()}-${messageCounter}`;
+}
+
+// Generate unique IDs for preview items
+let previewCounter = 0;
+function generatePreviewId(): string {
+  previewCounter += 1;
+  return `preview-${Date.now()}-${previewCounter}`;
+}
+
 interface Message {
   id: string;
   content: string;
@@ -115,7 +129,7 @@ const ChatInterface = () => {
     }
 
     const newUserMessage: Message = {
-      id: Date.now().toString(),
+      id: generateUniqueId("user"),
       content: inputValue,
       role: "user",
       timestamp: new Date(),
@@ -139,7 +153,7 @@ const ChatInterface = () => {
 
       // Add error message
       const errorMessage: Message = {
-        id: Date.now().toString(),
+        id: generateUniqueId("error"),
         content:
           "Sorry, there was an error processing your request. Please try again.",
         role: "assistant",
@@ -237,7 +251,7 @@ const ChatInterface = () => {
                   // Final message received, add to messages
                   if (receivedText) {
                     const newAssistantMessage: Message = {
-                      id: Date.now().toString(),
+                      id: generateUniqueId("assistant"),
                       content: receivedText,
                       role: "assistant",
                       timestamp: new Date(),
@@ -258,7 +272,7 @@ const ChatInterface = () => {
         const data = await response.json();
 
         const newAssistantMessage: Message = {
-          id: Date.now().toString(),
+          id: generateUniqueId("assistant"),
           content: data.message,
           role: "assistant",
           timestamp: new Date(),
@@ -300,7 +314,7 @@ const ChatInterface = () => {
 
       // Show a user message with the attached image preview
       const newUserMessage: Message = {
-        id: Date.now().toString(),
+        id: generateUniqueId("user-file"),
         content: textMessage || "Image upload",
         role: "user",
         timestamp: new Date(),
@@ -370,7 +384,7 @@ const ChatInterface = () => {
                   // Final message received, add to messages
                   if (receivedText) {
                     const newAssistantMessage: Message = {
-                      id: Date.now().toString(),
+                      id: generateUniqueId("assistant-file"),
                       content: receivedText,
                       role: "assistant",
                       timestamp: new Date(),
@@ -391,7 +405,7 @@ const ChatInterface = () => {
         const data = await response.json();
 
         const newAssistantMessage: Message = {
-          id: Date.now().toString(),
+          id: generateUniqueId("assistant-file"),
           content: data.message,
           role: "assistant",
           timestamp: new Date(),
@@ -610,7 +624,7 @@ const ChatInterface = () => {
               <div className="mt-3 grid grid-cols-2 gap-2">
                 {message.attachments.map((url, i) => (
                   <img
-                    key={i}
+                    key={`${message.id}-attachment-${i}`}
                     src={url}
                     alt={`Attachment ${i + 1}`}
                     className="rounded-md max-h-48 object-contain bg-gray-100"
@@ -667,7 +681,7 @@ const ChatInterface = () => {
         <div className="p-3 bg-white border-t border-gray-200">
           <div className="flex flex-wrap gap-2">
             {previewUrls.map((url, index) => (
-              <div key={index} className="relative">
+              <div key={generatePreviewId()} className="relative">
                 <img
                   src={url}
                   alt={`Preview ${index}`}
