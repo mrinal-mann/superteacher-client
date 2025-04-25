@@ -558,29 +558,57 @@ const ChatInterface = () => {
   // Get contextual UI cues
   const getContextualHint = () => {
     if (isLoading) return null;
-
+  
     switch (conversationState) {
       case "initial":
         return (
           <div className="text-sm text-gray-500 flex items-center mb-2">
             <HelpCircle className="w-4 h-4 mr-1" />
-            <span>Start by sharing what you'd like to grade</span>
+            <span>Say "Hi" to get started with CBSE grading</span>
           </div>
         );
-      case "waiting_for_answer":
+      case "waiting_for_class":
+        return (
+          <div className="text-sm text-blue-500 flex items-center mb-2">
+            <span>Please specify which class you're grading for (e.g., Class 10, Class 12)</span>
+          </div>
+        );
+      case "waiting_for_subject":
+        return (
+          <div className="text-sm text-blue-500 flex items-center mb-2">
+            <span>Please specify the subject (e.g., Economics, Mathematics)</span>
+          </div>
+        );
+      case "waiting_for_question_paper":
         return (
           <div className="text-sm text-blue-500 flex items-center mb-2">
             <ImageIcon className="w-4 h-4 mr-1" />
-            <span>Please upload an image of the student's work</span>
+            <span>Please upload the question paper with marks distribution</span>
           </div>
         );
-      case "waiting_for_instruction":
+      case "waiting_for_marks_confirmation":
         return (
           <div className="text-sm text-purple-500 flex items-center mb-2">
-            <span>
-              Specify how you'd like this graded (e.g., "Grade out of 10
-              points")
-            </span>
+            <span>Please confirm if the extracted marks are correct</span>
+          </div>
+        );
+      case "waiting_for_marks_update":
+        return (
+          <div className="text-sm text-purple-500 flex items-center mb-2">
+            <span>Please specify which question needs marks correction</span>
+          </div>
+        );
+      case "waiting_for_student_answer":
+        return (
+          <div className="text-sm text-blue-500 flex items-center mb-2">
+            <ImageIcon className="w-4 h-4 mr-1" />
+            <span>Please upload the student's answer paper for grading</span>
+          </div>
+        );
+      case "grading_in_progress":
+        return (
+          <div className="text-sm text-gray-500 flex items-center mb-2">
+            <span>Grading in progress...</span>
           </div>
         );
       case "complete":
@@ -591,7 +619,7 @@ const ChatInterface = () => {
               onClick={handleStartNewSession}
               className="underline hover:text-green-600"
             >
-              Start new assessment
+              Start new CBSE assessment
             </button>
           </div>
         );
