@@ -72,13 +72,17 @@ export default function ProblemSection() {
           transition={{ duration: 0.7 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            The Grading Crisis in Indian Education
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Every day, millions of Indian educators face overwhelming challenges
-          </p>
-          <div className="h-1 w-24 bg-[#0085fb] mx-auto mt-4 rounded-full"></div>
+          <div className="text-center mb-12">
+            <p className="text-base uppercase tracking-wide font-medium mb-2 text-[#0085fb]">
+              Problem
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">
+              The Grading Crisis in Indian Education
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Every day, millions of Indian educators face overwhelming challenges
+            </p>
+          </div>
         </motion.div>
 
         <motion.div

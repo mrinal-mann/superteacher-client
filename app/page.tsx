@@ -40,6 +40,11 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Ensure page starts at the top on load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <main className="overflow-x-hidden">
       <Header />
@@ -56,11 +61,22 @@ export default function Home() {
       </section>
       <section
         ref={(el) => {
+          sectionsRef.current[3] = el;
+          return undefined;
+        }}
+        className="fade-in-up"
+        id="stats"
+      >
+        <StatsSection />
+      </section>
+      <section
+        ref={(el) => {
           sectionsRef.current[1] = el;
           return undefined;
         }}
+        id="problem"
       >
-        <StatsSection />
+        <ProblemSection />
       </section>
       <section
         ref={(el) => {
@@ -68,19 +84,9 @@ export default function Home() {
           return undefined;
         }}
         className="fade-in-up"
-        id="features"
+        id="solution"
       >
-        <FeatureGrid />
-      </section>
-
-      <section
-        ref={(el) => {
-          sectionsRef.current[3] = el;
-          return undefined;
-        }}
-        className="fade-in-up"
-      >
-        <ProblemSection />
+        <SolutionSection />
       </section>
 
       <section
@@ -89,18 +95,19 @@ export default function Home() {
           return undefined;
         }}
         className="fade-in-up"
+        id="how-it-works"
       >
-        <SolutionSection />
+        <HowItWorks />
       </section>
-
       <section
         ref={(el) => {
           sectionsRef.current[5] = el;
           return undefined;
         }}
         className="fade-in-up"
+        id="features"
       >
-        <HowItWorks />
+        <FeatureGrid />
       </section>
 
       {/* <section
@@ -119,6 +126,7 @@ export default function Home() {
           return undefined;
         }}
         className="fade-in-up"
+        id="contact"
       >
         <FinalCta />
       </section>

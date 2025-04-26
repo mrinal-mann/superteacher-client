@@ -72,10 +72,10 @@ export const FloatingNav = ({
           </a>
         ))}
         <a
-          href="#try-free"
-          className="border text-sm font-medium relative border-black text-white bg-black dark:text-white px-4 py-2 rounded-full hover:bg-gray-800 transition-colors"
+          href="https://tally.so/r/w4ELKX"
+          className="border text-sm font-medium relative border-[#0085fb] text-white bg-[#0085fb] dark:text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors"
         >
-          <span>Try Free</span>
+          <span>Get Early Access</span>
           <span className="absolute inset-x-0 w-1/2 mx-auto -bottom-px bg-gradient-to-r from-transparent via-white/40 to-transparent h-px" />
         </a>
       </motion.div>

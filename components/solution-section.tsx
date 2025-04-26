@@ -41,11 +41,13 @@ export default function SolutionSection() {
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-16">
+      <div className="text-center mb-12">
+          <p className="text-base uppercase tracking-wide font-medium mb-2 text-[#0085fb]">
+            Solution
+          </p>
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-black">
             How Super Teacher Solves These Problems
           </h2>
-          <div className="h-1 w-24 bg-[#0085fb] mx-auto mt-4 rounded-full"></div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">

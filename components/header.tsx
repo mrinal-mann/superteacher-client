@@ -11,8 +11,11 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { name: "Product", link: "#product" },
+    { name: "Problem", link: "#problem" },
+    { name: "Solution", link: "#solution" },
+    { name: "How It Works", link: "#how-it-works" },
     { name: "Features", link: "#features" },
+    { name: "Testimonials", link: "#testimonials" },
     { name: "Contact", link: "#contact" },
   ];
 
@@ -45,14 +48,14 @@ export default function Header() {
           </nav>
 
           {/* CTA Button */}
-          {/* <Link href="#try-free">
+          <Link href="https://tally.so/r/w4ELKX">
             <HoverBorderGradient
               containerClassName="w-auto"
-              className="bg-black hover:bg-gray-800 text-white font-medium px-6 py-2"
+              className="bg-[#0085fb] hover:bg-blue-600 text-white font-medium px-6 py-2"
             >
-              Try Free
+              Get Early Access
             </HoverBorderGradient>
-          </Link> */}
+          </Link>
         </div>
       </header>
 
