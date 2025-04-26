@@ -10,6 +10,7 @@ import LiveDemo from "@/components/live-demo";
 import FeatureGrid from "@/components/feature-grid";
 import FinalCta from "@/components/final-cta";
 import Footer from "@/components/footer";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
@@ -41,6 +42,7 @@ export default function Home() {
   return (
     <main className="overflow-x-hidden">
       <Header />
+      <ThemeToggle />
 
       <section
         ref={(el) => {

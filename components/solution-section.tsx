@@ -2,8 +2,52 @@
 
 import { motion } from "framer-motion";
 import { Zap, BookOpen, MessageSquare, Laptop } from "lucide-react";
+import { NeonCard } from "./ui/neon-card";
 
 export default function SolutionSection() {
+  const solutions = [
+    {
+      id: 1,
+      title: "Lightning Fast Grading",
+      content:
+        "Upload assignments in bulk. AI grades all types: MCQs, short answers, essays. Results in minutes, not days. Works with handwritten answers.",
+      icon: <Zap size={32} className="text-[#0085fb]" />,
+      gradientColors: ["#0085fb", "#33a0ff", "#0085fb"],
+      titleColor: "from-[#0085fb] to-[#33a0ff]",
+      glowIntensity: 0.4,
+    },
+    {
+      id: 2,
+      title: "Indian Curriculum Expertise",
+      content:
+        "Aligned with CBSE, ICSE, and State Boards. Understands Indian English variations. Supports multiple regional languages. In alignment with NEP 2020.",
+      icon: <BookOpen size={32} className="text-[#0085fb]" />,
+      gradientColors: ["#0085fb", "white", "#0085fb"],
+      titleColor: "from-[#0085fb] to-[#33a0ff]",
+      glowIntensity: 0.5,
+    },
+    {
+      id: 3,
+      title: "Detailed Feedback",
+      content:
+        "Personalized comments for each student. Identifies learning gaps. Suggests improvement areas. Tracks progress over time.",
+      icon: <MessageSquare size={32} className="text-[#0085fb]" />,
+      gradientColors: ["#000000", "#0085fb", "#000000"],
+      titleColor: "from-[#0085fb] to-[#33a0ff]",
+      glowIntensity: 0.5,
+    },
+    {
+      id: 4,
+      title: "Teacher-Centric Design",
+      content:
+        "Simple interface, no tech skills needed. Customizable rubrics and criteria. Easy report generation. WhatsApp integration for parent updates.",
+      icon: <Laptop size={32} className="text-[#0085fb]" />,
+      gradientColors: ["white", "#0085fb", "white"],
+      titleColor: "from-[#0085fb] to-[#33a0ff]",
+      glowIntensity: 0.5,
+    },
+  ];
+
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4 md:px-6">
@@ -11,151 +55,31 @@ export default function SolutionSection() {
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             How Super Teacher Solves These Problems
           </h2>
-          <div className="h-1 w-24 bg-black mx-auto mt-4 rounded-full"></div>
+          <div className="h-1 w-24 bg-[#0085fb] mx-auto mt-4 rounded-full"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex gap-6"
-          >
-            <div className="flex-shrink-0">
-              <div className="w-16 h-16 bg-black/10 rounded-full flex items-center justify-center">
-                <Zap size={32} className="text-black" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {solutions.map((solution) => (
+            <NeonCard
+              key={solution.id}
+              gradientColors={solution.gradientColors}
+              glowIntensity={solution.glowIntensity}
+            >
+              <div className="flex flex-col items-center justify-center h-full space-y-4">
+                <div className="w-16 h-16 bg-[#0085fb]/10 rounded-full flex items-center justify-center mb-2">
+                  {solution.icon}
+                </div>
+                <span
+                  className={`bg-gradient-to-r ${solution.titleColor} bg-clip-text text-2xl font-bold text-transparent drop-shadow-lg`}
+                >
+                  {solution.title}
+                </span>
+                <p className="text-center text-sm font-medium text-gray-700 dark:text-gray-300/90">
+                  {solution.content}
+                </p>
               </div>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-4">
-                Lightning Fast Grading
-              </h3>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Upload assignments in bulk</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>AI grades all types: MCQs, short answers, essays</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Results in minutes, not days</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Works with handwritten answers</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex gap-6"
-          >
-            <div className="flex-shrink-0">
-              <div className="w-16 h-16 bg-black/10 rounded-full flex items-center justify-center">
-                <BookOpen size={32} className="text-black" />
-              </div>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-4">
-                Indian Curriculum Expertise
-              </h3>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Aligned with CBSE, ICSE, and State Boards</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Understands Indian English variations</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Supports multiple regional languages</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>In alignment with National Education Policy 2020</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex gap-6"
-          >
-            <div className="flex-shrink-0">
-              <div className="w-16 h-16 bg-black/10 rounded-full flex items-center justify-center">
-                <MessageSquare size={32} className="text-black" />
-              </div>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-4">Detailed Feedback</h3>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Personalized comments for each student</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Identifies learning gaps</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Suggests improvement areas</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Tracks progress over time</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex gap-6"
-          >
-            <div className="flex-shrink-0">
-              <div className="w-16 h-16 bg-black/10 rounded-full flex items-center justify-center">
-                <Laptop size={32} className="text-black" />
-              </div>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-4">
-                Teacher-Centric Design
-              </h3>
-              <ul className="space-y-3 text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Simple interface, no tech skills needed</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Customizable rubrics and criteria</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>Easy report generation</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-black mr-2">•</span>
-                  <span>WhatsApp integration for parent updates</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
+            </NeonCard>
+          ))}
         </div>
       </div>
     </section>
