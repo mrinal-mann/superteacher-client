@@ -3,13 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Header from "@/components/header";
 import Hero from "@/components/hero";
-import ValueProposition from "@/components/value-proposition";
 import ProblemSection from "@/components/problem-section";
 import SolutionSection from "@/components/solution-section";
 import HowItWorks from "@/components/how-it-works";
 import LiveDemo from "@/components/live-demo";
 import FeatureGrid from "@/components/feature-grid";
-import Testimonials from "@/components/testimonials";
 import FinalCta from "@/components/final-cta";
 import Footer from "@/components/footer";
 
@@ -60,8 +58,9 @@ export default function Home() {
           return undefined;
         }}
         className="fade-in-up"
+        id="features"
       >
-        <ValueProposition />
+        <FeatureGrid />
       </section>
 
       <section
@@ -107,26 +106,6 @@ export default function Home() {
       <section
         ref={(el) => {
           sectionsRef.current[6] = el;
-          return undefined;
-        }}
-        className="fade-in-up"
-      >
-        <FeatureGrid />
-      </section>
-
-      <section
-        ref={(el) => {
-          sectionsRef.current[7] = el;
-          return undefined;
-        }}
-        className="fade-in-up"
-      >
-        <Testimonials />
-      </section>
-
-      <section
-        ref={(el) => {
-          sectionsRef.current[8] = el;
           return undefined;
         }}
         className="fade-in-up"

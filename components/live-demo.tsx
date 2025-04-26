@@ -32,7 +32,7 @@ export default function LiveDemo() {
   }, [isTyping]);
 
   return (
-    <section className="py-20 bg-[#F7F7F7]">
+    <section className="py-20 bg-white">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -41,7 +41,7 @@ export default function LiveDemo() {
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Watch how our AI instantly grades and provides feedback
           </p>
-          <div className="h-1 w-24 bg-[#0085FB] mx-auto mt-4 rounded-full"></div>
+          <div className="h-1 w-24 bg-black mx-auto mt-4 rounded-full"></div>
         </div>
 
         <div className="max-w-4xl mx-auto">
@@ -49,9 +49,9 @@ export default function LiveDemo() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="bg-white rounded-xl shadow-lg overflow-hidden"
+            className="bg-white rounded-xl border border-gray-200 shadow-lg overflow-hidden"
           >
-            <div className="bg-[#0085FB] text-white p-4">
+            <div className="bg-black text-white p-4">
               <h3 className="text-xl font-bold">Live Grading Demo</h3>
             </div>
 
@@ -81,7 +81,7 @@ export default function LiveDemo() {
 
               <div className="mb-6">
                 <h4 className="font-bold mb-2">AI Feedback:</h4>
-                <div className="bg-[#F7F7F7] p-4 rounded-md min-h-32 border border-gray-200">
+                <div className="bg-gray-50 p-4 rounded-md min-h-32 border border-gray-200">
                   {isTyping ? (
                     <p>
                       {currentText}
@@ -98,7 +98,7 @@ export default function LiveDemo() {
               <div className="text-center">
                 <HoverBorderGradient
                   containerClassName="w-auto mx-auto"
-                  className="bg-[#0085FB] text-white font-bold px-8 py-3"
+                  className="bg-black text-white font-bold px-8 py-3"
                   onClick={() => setIsTyping(true)}
                   as={isTyping ? "div" : "button"}
                 >
@@ -107,6 +107,18 @@ export default function LiveDemo() {
               </div>
             </div>
           </motion.div>
+        </div>
+
+        <div className="mt-12 text-center">
+          <p className="mb-4 text-gray-600">Want to see more?</p>
+          <Button
+            className="bg-black hover:bg-gray-800 text-white"
+            onClick={() =>
+              window.open("https://www.loom.com/share/yourdemolink", "_blank")
+            }
+          >
+            Watch Full Product Demo
+          </Button>
         </div>
       </div>
     </section>

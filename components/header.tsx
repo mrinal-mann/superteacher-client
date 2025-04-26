@@ -9,11 +9,10 @@ import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+
   const navItems = [
     { name: "Product", link: "#product" },
-    { name: "Pricing", link: "#pricing" },
-    { name: "Testimonials", link: "#testimonials" },
+    { name: "Features", link: "#features" },
     { name: "Contact", link: "#contact" },
   ];
 
@@ -25,45 +24,40 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="relative z-20 flex items-center">
             <div className="w-10 h-10 ">
-              <Image src="/Logo.png" alt="Logo" width={40} height={40} /> 
+              <Image src="/Logo.png" alt="Logo" width={40} height={40} />
             </div>
-            <span className="text-2xl font-bold text-[#0085FB]">
+            <span className="text-2xl font-bold text-black">
               Super<span className="text-black"> Teacher</span>
             </span>
           </Link>
-          
+
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navItems.map((item, idx) => (
               <Link
                 key={idx}
                 href={item.link}
-                className="text-gray-600 hover:text-[#0085FB] font-medium transition-colors"
+                className="text-gray-600 hover:text-black font-medium transition-colors"
               >
                 {item.name}
               </Link>
             ))}
           </nav>
-          
+
           {/* CTA Button */}
-          {/* <Link href="/chat">
+          <Link href="#try-free">
             <HoverBorderGradient
               containerClassName="w-auto"
-              className="bg-[#0085FB] hover:bg-[#0075e0] text-white font-medium px-6 py-2"
+              className="bg-black hover:bg-gray-800 text-white font-medium px-6 py-2"
             >
-              Start Grading
+              Try Free
             </HoverBorderGradient>
-          </Link> */}
+          </Link>
         </div>
       </header>
 
       {/* Floating navbar that appears on scroll */}
-      <FloatingNav 
-        navItems={[
-          ...navItems
-        ]} 
-        className="py-3"
-      />
+      <FloatingNav navItems={[...navItems]} className="py-3" />
     </>
   );
 }

@@ -10,7 +10,7 @@
     --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
-    --primary: 213 100% 49%;
+    --primary: 0 0% 0%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 97%;
     --secondary-foreground: 0 0% 0%;
@@ -18,11 +18,11 @@
     --muted-foreground: 0 0% 45%;
     --accent: 0 0% 97%;
     --accent-foreground: 0 0% 0%;
-    --destructive: 0 100% 50%;
+    --destructive: 0 0% 0%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 213 100% 49%;
+    --ring: 0 0% 0%;
     --radius: 0.5rem;
   }
 
@@ -33,19 +33,19 @@
     --card-foreground: 0 0% 100%;
     --popover: 0 0% 9%;
     --popover-foreground: 0 0% 100%;
-    --primary: 213 100% 49%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 65%;
     --accent: 0 0% 15%;
     --accent-foreground: 0 0% 100%;
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 0% 100%;
+    --destructive-foreground: 0 0% 0%;
     --border: 0 0% 20%;
     --input: 0 0% 20%;
-    --ring: 213 100% 49%;
+    --ring: 0 0% 100%;
   }
 }
 
@@ -69,17 +69,24 @@
 }
 
 .animate-scroll {
-  animation: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+  animation: scroll var(--animation-duration, 40s)
+    var(--animation-direction, forwards) linear infinite;
 }
 
 .scroller {
-  mask-image: linear-gradient(to right, transparent, white 20%, white 80%, transparent);
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    white 20%,
+    white 80%,
+    transparent
+  );
 }
 
 /* Other Animations */
 .typewriter {
   overflow: hidden;
-  border-right: 0.15em solid #0085fb;
+  border-right: 0.15em solid #000000;
   white-space: nowrap;
   margin: 0 auto;
   letter-spacing: 0.05em;
@@ -101,18 +108,18 @@
     border-color: transparent;
   }
   50% {
-    border-color: #0085fb;
+    border-color: #000000;
   }
 }
 
 .gradient-button {
-  background: linear-gradient(90deg, #0085fb 0%, #00a3ff 100%);
+  background: linear-gradient(90deg, #000000 0%, #333333 100%);
   transition: all 0.3s ease;
 }
 
 .gradient-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 15px rgba(0, 133, 251, 0.5);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 
 .feature-card {
@@ -174,12 +181,29 @@
 
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(0, 133, 251, 0.7);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(0, 133, 251, 0);
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(0, 133, 251, 0);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   }
+}
+
+/* Custom gradient for subtle effects */
+.subtle-gradient {
+  background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+}
+
+.dark-gradient {
+  background: linear-gradient(135deg, #111111 0%, #333333 100%);
+}
+
+.btn-gradient {
+  background: linear-gradient(90deg, #000000 0%, #333333 100%);
+}
+
+.btn-gradient:hover {
+  background: linear-gradient(90deg, #333333 0%, #000000 100%);
 }

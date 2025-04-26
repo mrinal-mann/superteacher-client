@@ -1,58 +1,85 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
+import Link from "next/link";
 
 export default function Hero() {
   return (
-    <section className="pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
+    <section className="py-12 md:py-20 bg-gradient-to-r from-gray-50 to-white overflow-hidden">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              <span>India's First </span>
-              <span className="text-blue-500">AI-Powered</span>
-              <span> Grading Platform for </span>
-              <span className="text-blue-500">Teachers</span>
+        <div className="flex flex-col lg:flex-row items-center gap-12">
+          {/* Left side - Text content */}
+          <div className="lg:w-1/2 space-y-6 lg:pr-10">
+            {/* Optional badge like "Backed by Y Combinator" */}
+            <div className="flex items-center gap-2 text-sm font-medium mb-4">
+              <span className="text-gray-600">Powered by</span>
+              <div className="bg-black text-white px-2 py-0.5 rounded">AI</div>
+            </div>
+
+            {/* Main headline */}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              <span className="text-black">India's First AI-Powered</span>
+              <br />
+              <span className="text-black">Grading Platform</span>
+              <br />
+              <span className="text-gray-600">For Teachers</span>
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-gray-700">
+
+            {/* Subheadline */}
+            <p className="text-lg md:text-xl text-gray-700 max-w-lg">
               Say goodbye to long nights grading papers. Super Teacher grades
               assignments with accuracy and provides detailed feedback in
-              minutes, not hours.
+              minutes, not hours
             </p>
-            <HoverBorderGradient
-              containerClassName="w-auto"
-              className="bg-[#0085FB] hover:bg-[#0075e0] font-bold text-lg px-8 py-6"
-              onClick={() => window.open("https://tally.so/r/w4ELKX", "_blank")}
-            >
-              <a
-                href="https://tally.so/r/w4ELKX"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Join the Waitlist
-              </a>
-            </HoverBorderGradient>
 
-            <div className="mt-8 p-4 bg-[#F7F7F7] rounded-lg border border-gray-200">
-              <p className="text-sm text-gray-600 font-medium">
-                Trusted by 500+ schools & teachers across Delhi, Mumbai, and
-                Bangalore
-              </p>
+    
+
+            {/* CTA buttons */}
+            <div className="flex flex-wrap gap-4 pt-4">
+              <Link href="#try-free">
+                <Button className="bg-black hover:bg-gray-800 text-white px-8 py-6 h-auto text-base font-medium rounded-md">
+                  Talk to Founders
+                </Button>
+              </Link>
+              <Link href="#contact">
+                <Button
+                  variant="outline"
+                  className="bg-white border-gray-300 text-gray-800 hover:bg-gray-100 px-8 py-6 h-auto text-base font-medium rounded-md"
+                >
+                  Contact Us
+                </Button>
+              </Link>
             </div>
           </div>
-          <div className="">
-            <Image
-              src="/super.png"
-              alt="Handwritten answer example"
-              width={300}
-              height={400}
-              className="rounded-lg w-full h-auto"
-            />
-          </div>
+
+          {/* Right side - Product screenshot */}
+          <motion.div
+            className="lg:w-1/2 relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <div className="relativep-0.5">
+              {/* Product screenshot */}
+              <Image
+                src="/super.png"
+                alt="Super Teacher interface showing AI-powered grading"
+                width={800}
+                height={600}
+                className="rounded-2xl"
+                // If you don't have this exact image, you'll need to create a screenshot of your app
+                // Fallback if image is not available
+                onError={(e) => {
+                  e.currentTarget.src = "/super.png"; // Fallback to existing image
+                }}
+              />
+
+              {/* Optional grading annotation overlay */}
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
