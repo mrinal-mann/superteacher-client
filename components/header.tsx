@@ -45,14 +45,14 @@ export default function Header() {
           </nav>
 
           {/* CTA Button */}
-          <Link href="#try-free">
+          {/* <Link href="#try-free">
             <HoverBorderGradient
               containerClassName="w-auto"
               className="bg-black hover:bg-gray-800 text-white font-medium px-6 py-2"
             >
               Try Free
             </HoverBorderGradient>
-          </Link>
+          </Link> */}
         </div>
       </header>
 

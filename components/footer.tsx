@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
           <div>
-            <Link href="/" className="flex items-center mb-6">
+            <Link href="/" className="flex items-center mb-4">
               <div className="w-8 h-8 mr-2">
                 <Image src="/whitelogo.png" alt="Logo" width={32} height={32} />
               </div>
@@ -18,9 +18,11 @@ export default function Footer() {
                 Super<span className="text-white"> Teacher</span>
               </span>
             </Link>
+            <h2 className="text-gradient font-medium text-lg mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-emerald-400">
+              India's First AI-Powered Grading Platform for Teachers
+            </h2>
             <p className="text-gray-400 mb-6">
-              India's First AI-Powered Grading Platform for Teachers. Save time,
-              provide better feedback.
+              Save time, provide better feedback.
             </p>
             <div className="flex space-x-4">
               <a
@@ -28,7 +30,7 @@ export default function Footer() {
                 className="text-gray-400 hover:text-white transition-colors"
               >
                 <Facebook size={20} />
-              </a>   
+              </a>
               <a
                 href="#"
                 className="text-gray-400 hover:text-white transition-colors"

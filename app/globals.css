@@ -196,6 +196,22 @@
   background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
 }
 
+.blue-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 133, 251, 0.05) 0%,
+    rgba(255, 255, 255, 1) 100%
+  );
+}
+
+.blue-gradient-reverse {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(0, 133, 251, 0.05) 100%
+  );
+}
+
 .dark-gradient {
   background: linear-gradient(135deg, #111111 0%, #333333 100%);
 }
@@ -206,4 +222,12 @@
 
 .btn-gradient:hover {
   background: linear-gradient(90deg, #333333 0%, #000000 100%);
+}
+
+.btn-blue-gradient {
+  background: linear-gradient(90deg, #0085fb 0%, #0063bd 100%);
+}
+
+.btn-blue-gradient:hover {
+  background: linear-gradient(90deg, #0063bd 0%, #0085fb 100%);
 }

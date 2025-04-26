@@ -36,7 +36,7 @@ export default function FinalCta() {
           </p>
           <HoverBorderGradient
             containerClassName="w-auto mx-auto"
-            className="bg-white text-black hover:bg-gray-100 font-bold text-lg px-8 py-6 pulse"
+            className="bg-[#0085fb] text-white hover:bg-gray-100 font-bold text-lg px-8 py-6 pulse"
             onClick={() => window.open("https://tally.so/r/w4ELKX", "_blank")}
           >
             Get Early Access

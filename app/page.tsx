@@ -11,6 +11,7 @@ import FeatureGrid from "@/components/feature-grid";
 import FinalCta from "@/components/final-cta";
 import Footer from "@/components/footer";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import StatsSection from "@/components/stats-section";
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
@@ -53,10 +54,17 @@ export default function Home() {
       >
         <Hero />
       </section>
-
       <section
         ref={(el) => {
           sectionsRef.current[1] = el;
+          return undefined;
+        }}
+      >
+        <StatsSection />
+      </section>
+      <section
+        ref={(el) => {
+          sectionsRef.current[2] = el;
           return undefined;
         }}
         className="fade-in-up"
@@ -67,7 +75,7 @@ export default function Home() {
 
       <section
         ref={(el) => {
-          sectionsRef.current[2] = el;
+          sectionsRef.current[3] = el;
           return undefined;
         }}
         className="fade-in-up"
@@ -77,7 +85,7 @@ export default function Home() {
 
       <section
         ref={(el) => {
-          sectionsRef.current[3] = el;
+          sectionsRef.current[4] = el;
           return undefined;
         }}
         className="fade-in-up"
@@ -87,7 +95,7 @@ export default function Home() {
 
       <section
         ref={(el) => {
-          sectionsRef.current[4] = el;
+          sectionsRef.current[5] = el;
           return undefined;
         }}
         className="fade-in-up"
@@ -95,15 +103,15 @@ export default function Home() {
         <HowItWorks />
       </section>
 
-      <section
+      {/* <section
         ref={(el) => {
-          sectionsRef.current[5] = el;
+          sectionsRef.current[6] = el;
           return undefined;
         }}
         className="fade-in-up"
       >
         <LiveDemo />
-      </section>
+      </section> */}
 
       <section
         ref={(el) => {
