@@ -15,7 +15,6 @@ export default function Header() {
     { name: "Solution", link: "#solution" },
     { name: "How It Works", link: "#how-it-works" },
     { name: "Features", link: "#features" },
-    { name: "Testimonials", link: "#testimonials" },
     { name: "Contact", link: "#contact" },
   ];
 

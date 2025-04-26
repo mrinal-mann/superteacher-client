@@ -2,27 +2,24 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Send,
   Image as ImageIcon,
   ArrowLeft,
   RefreshCw,
-  HelpCircle,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import ReactMarkdown from "react-markdown"; // Add this import for rendering markdown
+import ReactMarkdown from "react-markdown";
 
-// Generate unique IDs for messages
+// Generate unique IDs for messages and previews
 let messageCounter = 0;
+let previewCounter = 0;
 function generateUniqueId(prefix: string = "msg"): string {
   messageCounter += 1;
   return `${prefix}-${Date.now()}-${messageCounter}`;
 }
 
-// Generate unique IDs for preview items
-let previewCounter = 0;
 function generatePreviewId(): string {
   previewCounter += 1;
   return `preview-${Date.now()}-${previewCounter}`;
@@ -34,9 +31,14 @@ interface Message {
   role: "user" | "assistant";
   timestamp: Date;
   attachments?: string[];
-  isGrading?: boolean; // Flag for assessment/grading responses
-  subjectArea?: string; // Subject area detected for this message
+  isGrading?: boolean;
+  subjectArea?: string;
 }
+
+// Suggestion chips data
+const suggestionChips = [
+  { text: "Say Hi to start", icon: "👋" },
+];
 
 // Create a separate client component to handle state
 const ChatInterface = () => {
@@ -47,12 +49,12 @@ const ChatInterface = () => {
   const [previewUrls, setPreviewUrls] = React.useState<string[]>([]);
   const [userId, setUserId] = React.useState<string>("");
   const [streamingMessage, setStreamingMessage] = React.useState<string>("");
-  const [conversationState, setConversationState] =
+  const [conversationState, setConversationState] = 
     React.useState<string>("initial");
-  const [detectedSubject, setDetectedSubject] = React.useState<string>("");
+  const [showWelcome, setShowWelcome] = React.useState<boolean>(true);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const textareaRef = React.useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -67,6 +69,9 @@ const ChatInterface = () => {
     // Check the most recent message
     const lastMessage = messages[messages.length - 1];
     if (lastMessage?.role === "assistant") {
+      // If we have any messages, hide the welcome screen
+      setShowWelcome(false);
+      
       // Detect grading completion
       if (
         lastMessage.content.includes("Do you want to grade another answer?") ||
@@ -80,8 +85,10 @@ const ChatInterface = () => {
       }
       // Detect waiting for image
       else if (
-        lastMessage.content.includes("Please upload an image") ||
-        lastMessage.content.includes("share an image")
+        lastMessage.content.includes("Please upload") ||
+        lastMessage.content.includes("share an image") ||
+        lastMessage.content.includes("upload the question paper") ||
+        lastMessage.content.includes("upload the student's")
       ) {
         console.log("Detected waiting for image upload");
         setConversationState("waiting_for_answer");
@@ -89,13 +96,12 @@ const ChatInterface = () => {
       // Detect waiting for grading instruction
       else if (
         lastMessage.content.includes("How would you like me to evaluate") ||
-        lastMessage.content.includes("How would you like me to grade")
+        lastMessage.content.includes("How would you like me to grade") ||
+        lastMessage.content.includes("marks are correct")
       ) {
         console.log("Detected waiting for grading instructions");
         setConversationState("waiting_for_instruction");
       }
-
-      // No need to detect and highlight specific subject areas anymore
     }
   }, [messages]);
 
@@ -108,6 +114,9 @@ const ChatInterface = () => {
 
   const handleSendMessage = async () => {
     if ((!inputValue.trim() && selectedFiles.length === 0) || isLoading) return;
+
+    // Hide welcome screen when user sends a message
+    setShowWelcome(false);
 
     // Reset user ID for greeting messages
     if (inputValue.toLowerCase().match(/^(hi|hello|hey|greetings|start)\b/)) {
@@ -304,7 +313,7 @@ const ChatInterface = () => {
         formData.append("message", textMessage);
       }
 
-      // Append the image file
+      // Append the image file (only once)
       selectedFiles.forEach((file) => {
         formData.append("image", file);
       });
@@ -312,7 +321,7 @@ const ChatInterface = () => {
       // Set conversation state to processing
       setConversationState("grading_in_progress");
 
-      // Show a user message with the attached image preview
+      // Only include the image attachment on the user's message, not duplicated
       const newUserMessage: Message = {
         id: generateUniqueId("user-file"),
         content: textMessage || "Image upload",
@@ -466,7 +475,7 @@ const ChatInterface = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -537,11 +546,25 @@ const ChatInterface = () => {
     sendTextToBackend("Start a new grading session");
   };
 
+  const handleSuggestionClick = (suggestion: string) => {
+    setInputValue(suggestion);
+    if (suggestion === "Say Hi to start") {
+      setInputValue("Hi");
+      // Auto-send Hi message
+      setTimeout(() => {
+        if (textareaRef.current) {
+          textareaRef.current.value = "Hi";
+          handleSendMessage();
+        }
+      }, 100);
+    }
+  };
+
   // Get input placeholder based on conversation state
   const getInputPlaceholder = () => {
     switch (conversationState) {
       case "initial":
-        return "Type a question you want to grade or say 'hi' to get started...";
+        return "Start grading...";
       case "waiting_for_question":
         return "What question or assignment would you like to assess?";
       case "waiting_for_answer":
@@ -560,13 +583,6 @@ const ChatInterface = () => {
     if (isLoading) return null;
   
     switch (conversationState) {
-      case "initial":
-        return (
-          <div className="text-sm text-gray-500 flex items-center mb-2">
-            <HelpCircle className="w-4 h-4 mr-1" />
-            <span>Say "Hi" to get started with CBSE grading</span>
-          </div>
-        );
       case "waiting_for_class":
         return (
           <div className="text-sm text-blue-500 flex items-center mb-2">
@@ -636,36 +652,36 @@ const ChatInterface = () => {
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <h1 className="text-xl font-semibold text-[#0085FB]">
-          Super<span className="text-black">Teacher</span> Grading Assistant
+          Super<span className="text-black">Teacher</span>
         </h1>
       </header>
 
       {/* Messages Container */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Welcome message when no messages exist */}
-        {messages.length === 0 && !streamingMessage && !isLoading && (
-          <div className="text-center p-8 text-gray-500">
-            <h2 className="text-xl font-semibold mb-2">
-              Welcome to Super Teacher!
-            </h2>
-            <p>Our AI assistant helps you grade student work in any subject.</p>
-            <p className="mt-4 text-sm">To get started:</p>
-            <ol className="text-left mt-2 mx-auto inline-block">
-              <li>1. Share the question you're grading</li>
-              <li>2. Upload an image of the student's work</li>
-              <li>3. Tell us how you'd like it graded</li>
-            </ol>
-            <p className="mt-4">
-              <button
-                onClick={() => setInputValue("Hi")}
-                className="text-[#0085FB] hover:underline"
-              >
-                Say "Hi" to begin
-              </button>
-            </p>
+        {/* Welcome screen */}
+        {showWelcome && !isLoading && messages.length === 0 && (
+          <div className="flex flex-col items-center text-center">
+            <div className="text-2xl font-bold mb-1">Hi, Teacher!</div>
+            <div className="text-gray-600 mb-6">How can I help you today?</div>
+            
+            <div className="text-sm text-gray-500 mb-3">Here are some suggestions</div>
+            
+            <div className="flex flex-col space-y-3 w-full max-w-xs mx-auto">
+              {suggestionChips.map((suggestion, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleSuggestionClick(suggestion.text)}
+                  className="py-3 px-4 border border-gray-200 rounded-full bg-white hover:bg-gray-50 transition-colors text-sm flex items-center justify-center"
+                >
+                  <span className="mr-2">{suggestion.icon}</span>
+                  {suggestion.text}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
+        {/* Conversation messages */}
         {messages.map((message) => (
           <div
             key={message.id}
@@ -693,7 +709,7 @@ const ChatInterface = () => {
 
             {/* Display attachments if any */}
             {message.attachments && message.attachments.length > 0 && (
-              <div className="mt-3 grid grid-cols-2 gap-2">
+              <div className="mt-3 grid grid-cols-1 gap-2">
                 {message.attachments.map((url, i) => (
                   <img
                     key={`${message.id}-attachment-${i}`}
@@ -710,7 +726,7 @@ const ChatInterface = () => {
         {/* Streaming message */}
         {streamingMessage && (
           <div className="max-w-[85%] rounded-lg p-4 bg-white border border-gray-200 mr-auto">
-            <div className="mb-1 text-sm opacity-70">Super Teacher AI</div>
+            <div className="mb-1 text-sm opacity-70">SuperTeacher AI</div>
             <div className="whitespace-pre-wrap prose prose-sm max-w-none dark:prose-invert">
               <ReactMarkdown>{streamingMessage}</ReactMarkdown>
             </div>
@@ -735,11 +751,7 @@ const ChatInterface = () => {
               ></div>
             </div>
             <div className="text-sm text-gray-500">
-              Super Teacher AI is{" "}
-              {conversationState === "grading_in_progress"
-                ? "grading"
-                : "thinking"}
-              ...
+              AI can make mistakes. Check important info.
             </div>
           </div>
         )}
@@ -775,54 +787,46 @@ const ChatInterface = () => {
       <div className="p-3 bg-white border-t border-gray-200">
         {getContextualHint()}
 
-        <div className="flex items-end gap-2 max-w-4xl mx-auto">
+        <div className="flex items-center gap-2 max-w-4xl mx-auto">
+          {/* Camera button */}
           <Button
             variant="outline"
             size="icon"
-            className={cn(
-              "rounded-full h-10 w-10 flex-shrink-0",
-              conversationState === "waiting_for_answer" &&
-                "animate-pulse border-blue-400"
-            )}
+            className="rounded-full h-12 w-12 flex-shrink-0 bg-white"
             onClick={() => fileInputRef.current?.click()}
           >
-            <ImageIcon
-              className={cn(
-                "h-5 w-5",
-                conversationState === "waiting_for_answer" && "text-blue-500"
-              )}
-            />
+            <div className="flex items-center justify-center w-full h-full">
+              <ImageIcon className="h-6 w-6 text-gray-500" />
+            </div>
             <input
               type="file"
               accept="image/*"
-              multiple
               className="hidden"
-              aria-label="Upload images"
+              aria-label="Upload image"
               ref={fileInputRef}
               onChange={handleFileSelect}
             />
           </Button>
 
-          <div className="flex-1 relative">
-            <Textarea
+          {/* Text input area with send button inside */}
+          <div className="flex-1 relative bg-white rounded-full border border-gray-300 flex items-center pr-2">
+            <input
+              type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={getInputPlaceholder()}
-              className="min-h-[50px] max-h-[200px] pr-10 resize-none"
+              className="flex-1 py-3 px-4 bg-transparent outline-none text-gray-800 rounded-full"
               ref={textareaRef}
             />
+            <Button
+              className="rounded-full h-10 w-10 flex-shrink-0 bg-[#0085FB] hover:bg-[#0075e0] flex items-center justify-center"
+              onClick={handleSendMessage}
+              disabled={(!inputValue.trim() && selectedFiles.length === 0) || isLoading}
+            >
+              <Send className="h-5 w-5 text-white" />
+            </Button>
           </div>
-
-          <Button
-            className="rounded-full h-10 w-10 flex-shrink-0 bg-[#0085FB] hover:bg-[#0075e0]"
-            onClick={handleSendMessage}
-            disabled={
-              (!inputValue.trim() && selectedFiles.length === 0) || isLoading
-            }
-          >
-            <Send className="h-5 w-5" />
-          </Button>
         </div>
       </div>
     </div>
