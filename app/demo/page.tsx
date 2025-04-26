@@ -797,6 +797,7 @@ const ChatInterface = () => {
               accept="image/*"
               multiple
               className="hidden"
+              aria-label="Upload images"
               ref={fileInputRef}
               onChange={handleFileSelect}
             />

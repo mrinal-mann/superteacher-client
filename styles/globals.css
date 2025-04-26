@@ -8,7 +8,15 @@ body {
 
 @layer utilities {
   .text-balance {
-    text-wrap: balance;
+    /* Fallback for all browsers */
+    max-width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+
+    /* Apply text-wrap only in supporting browsers */
+    @supports (text-wrap: balance) {
+      text-wrap: balance;
+    }
   }
 }
 
